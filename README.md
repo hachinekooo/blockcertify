@@ -1,6 +1,6 @@
 # BlockcertifyApplication
 
-基于 Spring Boot 的区块链存证项目，支持通过 AOP 无感接入业务系统。
+基于 Spring Boot 开发的区块链存证系统，采用 AOP 实现无感接入，支持 API 调用。该系统脱胎于既往区块链功能接入经验，进行了全新设计与实现。
 
 ## 特性
 
