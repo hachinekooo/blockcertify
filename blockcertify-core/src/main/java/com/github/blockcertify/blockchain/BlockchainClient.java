@@ -7,10 +7,12 @@ import com.github.blockcertify.support.enums.ClientStatusEnum;
 import java.util.Map;
 
 /*
- * 区块链客户端接口
- * 规范不同厂家的SDK调用
+ * AutoCloseable
+ * 规范不同厂家的SDK调用。
+ *
+ * AutoCloseable 接口支持 try-with-resources
  * */
-public interface BlockchainClient {
+public interface BlockchainClient extends AutoCloseable{
 
     /**
      * 初始化配置
