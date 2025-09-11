@@ -2,9 +2,11 @@ package com.github.blockcertify.blockchain;
 
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.CertifyQueryResult;
+import com.github.blockcertify.model.CertifyResult;
 import com.github.blockcertify.support.enums.ClientStatusEnum;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /*
  * AutoCloseable
@@ -39,17 +41,17 @@ public interface BlockchainClient extends AutoCloseable{
      * 进行存证（同步）
      *
      * @param certifyData 存证数据
-     * @return boolean 是否存证成功
+     * @return {@link CertifyResult } 存证结果
      */
-    boolean certifySync(CertifyData certifyData);
+    CertifyResult certifySync(CertifyData certifyData);
 
     /**
      * 进行存证（异步）
      *
      * @param certifyData 存证数据
-     * @return boolean 是否存证成功
+     * @return {@link CertifyResult } 存证结果
      */
-    boolean certifyAsync(CertifyData certifyData);
+    CompletableFuture<CertifyResult> certifyAsync(CertifyData certifyData);
 
     /**
      * 查询存证
