@@ -1,7 +1,9 @@
 package com.github.blockcertify.engine;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
  */
 @Data //自动生成getter、setter、equals、hashCode、toString方法
 @Builder // 构建者模式
+@NoArgsConstructor // 无参构造方法
+@AllArgsConstructor // 全参构造方法
 public class CertifyContext {
 
 
@@ -20,7 +24,6 @@ public class CertifyContext {
      * 业务操作时间
      */
     private LocalDateTime bizOptTime;
-
 
     /**
      * 开始时间
