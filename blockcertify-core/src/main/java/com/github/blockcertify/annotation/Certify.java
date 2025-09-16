@@ -1,6 +1,6 @@
 package com.github.blockcertify.annotation;
 
-public @interface BlockchainCertify {
+public @interface Certify {
 
     /*
     * 业务类型
