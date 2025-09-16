@@ -7,6 +7,7 @@ import com.github.blockcertify.model.infra.CertifyRecord;
 import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
 import com.github.blockcertify.support.enums.ClientStatusEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
  * @date 2025/09/10
  */
 @Slf4j
+@Component
 public class CertifyEngine {
 
     @Resource
