@@ -9,7 +9,8 @@ public enum CertifyRecordStatusEnum {
       SUBMITTED("已提交"),      // 已提交到区块链，等待打包
       CONFIRMING("确认中"),     // 区块链确认中
       SUCCESS("成功"),          // 存证成功
-      FAILED("失败")            // 存证失败
+      FAILED("失败"),            // 存证失败
+      DISABLED("功能未启用");    // 新增状态
     ;
 
     private final String status;
