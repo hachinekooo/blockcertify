@@ -1,0 +1,12 @@
+blockchain:
+  # 区块链总开关
+  enabled: true
+
+  # 测试配置
+  testing:
+    mock-enabled: true
+    mock-config:
+      success-rate: 0.9           # 90% 成功率
+      avg-response-time: 2000     # 平均响应时间2秒
+      simulate-reorg: false       # 是否模拟重组
+      simulate-random-network-delay: true # 是否模拟随机网络延迟
