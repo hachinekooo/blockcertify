@@ -185,7 +185,7 @@ PACKED/CONFIRMED -> REORGED -> 重新开始流程 -> 复制改记录状态改为
 | **字段名称**              | **字段类型**     | **字段说明**        | **是否必填** | **备注**                                 |
 | --------------------- | ------------ | --------------- | -------- | -------------------------------------- |
 | id                    | bigint       | 主键（逻辑主键）        | 是        |                                        |
-| biz_type              | varchar(100) | 操作业务的类型         | 是        | 如 stockIn/stockOut/stockTransfer       |
+| biz_type              | varchar(100) | 操作业务的类型         | 是        | 如 payment/transfer       |
 | biz_id                | varchar(100) | 操作业务的主键         | 是        | 关联的具体业务记录 ID                           |
 | biz_opt_time          | datetime     | 业务操作时间          | 是        | 实际的业务操作发生时间                            |
 | certify_time          | datetime     | 存证时间            |          | 区块链存证成功的时间                             |
@@ -320,85 +320,7 @@ MetricsManager.collect() --> 收集各项监控数据
 本项目的配置设计原则是 "配置驱动"，它有很多优点，能解决硬编码的问题，修改无需重新编译代码，调整灵活。
 
 ```yml
-blockchain:
-  # 区块链总开关
-  enabled: true
-  # 默认的SDK厂商
-  default-vendor: "antchain"
-  
-  # 厂商配置
-  vendors:
-  	antchain:
-  		name: "蚂蚁链"
-  		config:
-  			account: "wangwenpeng"
-  			userpassword: "woshimima"
-  			host: "200.200.200.200"
-  			port: "18130"
-  			ca-path: "cert/blockchain/hyperchain/ca"
-  			default-max-struct-data-size: 1048576 # 1MB
-			default-max-unstruct-data-size: 10485760   # 10MB
-			default-max-file-count: 10 # 10个附件限制
-  # 测试配置
-  testing:
-	mock-enabled: true
-	mock-config:
-	  success-rate: 0.9           # 90% 成功率
-	  avg-response-time: 2000     # 平均响应时间2秒
-	  simulate-reorg: false       # 是否模拟重组
-	  simulate-random-network-delay: true # 是否模拟随机网络延迟
-  
-  # 业务配置
-  business:
-  	# 数据提取器对照关系
-  	data-extractor:
-  		stockIn: "stockInDataExtractor"
-  	  	stockOut: "stockOutDataExtractor"
-  	# 不同业务类型的确认数配置
-	confirmation-rules:
-	  default: 6 # 默认确认数
-	  biz-specific:
-	    stockIn: 3      # 入库操作，风险较低
-  	    stockOut: 6     # 出库操作，需要更多确认
-    # 重试配置 
-    retry:
-      default:
-        max-attempts: 3 # 默认最大重试次数
-        max-delay: 300000 # 最大等待延迟
-      biz-specific:
-	    stockIn:
-	    	max-attempts: 6
-	    	max-delay: 100000
-	    	
-	# 映射处理器配置
-    mapper-handlers:
-      default:
-    	- "bizFieldMapper"  # 业务机构业务部门业务员映射处理器
-	  biz-specific:
-  		stockIn:
-	       - "materialFiveFieldMapper"    # 物料五大参数映射处理器   
-	       
-    # 数据处理器配置
-    data-handlers:
-      default:
-        - "sensitiveDataMaskHandler"  # 全局脱敏处理器
-        - "timestampFormatHandler"    # 时间格式化处理器
-	  biz-specific:
-	    stockIn:
-          - "priceHandler"    # 价格处理器
-          
-	# 字段策略处理器配置
-	field-strategy:
-	  default:
-	    biz-organization: "bizOrg"
-		biz-department: "bizDept"
-		biz-representative: "bizRep"
-	  biz-specific:
-		stockOut:
-		  biz-organization: "bizOrganization"
-		  biz-department: "bizDepartment"
-		  biz-representative: "bizRepresentative"
-		
+
 ```
 
 后期优化方向：
@@ -570,14 +492,3 @@ public @interface BlockchainCertify {
 
 
 ## Part 4: 总结（Summary）
-
-
-
-
-
-
-
-
- 
-
- 

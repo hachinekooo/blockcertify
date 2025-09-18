@@ -29,7 +29,7 @@ public class CertifyRecord implements Serializable {
     private Long id;
 
     /**
-     * 操作业务的类型，如 stockIn/stockOut/stockTransfer
+     * 操作业务的类型，如 payment/transfer
      */
     @TableField("biz_type")
     private String bizType;
