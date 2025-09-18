@@ -7,6 +7,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
 
+/**
+ *  Web配置类，用于添加拦截器
+ *
+ * @author wangwenpeng
+ * @date 2025/09/18
+ */
 @Configuration
   public class WebConfig implements WebMvcConfigurer {
 
