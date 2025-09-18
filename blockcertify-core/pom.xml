@@ -36,9 +36,17 @@
             <scope>provided</scope> <!-- 避免导致打包时重复引入 Servlet API，引发容器启动冲突. 因为 Servlet API 是容器提供的(如 Tomcat)，不需要打包进应用 -->
         </dependency>
 
+        <!-- 切面编程 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- Google Guava 工具类库 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.4.0-jre</version>
         </dependency>
 
     </dependencies>
