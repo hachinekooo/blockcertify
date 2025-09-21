@@ -36,7 +36,7 @@
             <scope>provided</scope> <!-- 避免导致打包时重复引入 Servlet API，引发容器启动冲突. 因为 Servlet API 是容器提供的(如 Tomcat)，不需要打包进应用 -->
         </dependency>
 
-        <!-- 切面编程 -->
+        <!-- 切面编程，该依赖支持自动开启 AOP，无需显式使用 EnableAspectJAutoProxy 注解 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -47,6 +47,13 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>33.4.0-jre</version>
+        </dependency>
+
+        <!-- Spring Boot Test Starter Include JUnit 5 Mockito -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
