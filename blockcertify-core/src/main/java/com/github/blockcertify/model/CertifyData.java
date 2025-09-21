@@ -1,8 +1,10 @@
 package com.github.blockcertify.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.Map;
  * @since 2025-09-04
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CertifyData {
     

@@ -1,7 +1,9 @@
 package com.github.blockcertify.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 
@@ -12,6 +14,8 @@ import java.math.BigInteger;
  * @since 2025-09-04
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CertifyResult {
 
