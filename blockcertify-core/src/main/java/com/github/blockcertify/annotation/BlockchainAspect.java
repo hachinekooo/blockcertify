@@ -11,11 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 @Slf4j
 @Aspect // 标识这是一个切面类，用于处理横切逻辑
+@Component
 public class BlockchainAspect {
 
     @Resource
