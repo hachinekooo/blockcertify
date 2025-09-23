@@ -1,14 +1,14 @@
 package com.github.blockcertify.engine;
 
 import com.github.blockcertify.blockchain.BlockchainClient;
-import com.github.blockcertify.model.*;
 import com.github.blockcertify.infra.CertifyService;
-import com.github.blockcertify.model.infra.CertifyRecord;
-import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
+import com.github.blockcertify.model.CertifyData;
+import com.github.blockcertify.model.CertifyQueryResult;
+import com.github.blockcertify.model.CertifyResult;
+import com.github.blockcertify.model.CertifyStatus;
 import com.github.blockcertify.support.enums.ClientStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.concurrent.CompletableFuture;
@@ -41,24 +41,8 @@ public class CertifyEngine {
             return null;
         }
 
-        // 1. 保存存证基本数据
-        CertifyRecord certifyRecord = certifyService.saveCertifyData(certifyData, CertifyRecordStatusEnum.INIT);
-        // 2. 调用SDK异步存证方法（返回一个future，这个future是一个"未来的承诺"）
+        // 调用SDK异步存证方法（返回一个future，这个future是一个"未来的承诺"）
         CompletableFuture<CertifyResult> certifyFuture = blockchainClient.certifyAsync(certifyData);
-        // 3. 更新存证记录的状态为处理中
-        certifyService.updateRecordStatus(certifyRecord, CertifyRecordStatusEnum.PROCESSING);
-        // 4. 注册一个回调函数，这个回调函数会在某个时刻运行，执行这个回调的是另一个线程，所以到这里不会阻塞
-        certifyFuture.thenAccept((result) -> {
-            if (ObjectUtils.isEmpty(result)) {
-                log.error("Certify result is empty, recordId: {}", certifyRecord.getId());
-            }
-            if (result.isSuccess()) {
-                certifyService.updateRecordStatus(certifyRecord, CertifyRecordStatusEnum.SUBMITTED);
-            } else {
-                certifyService.updateRecordStatus(certifyRecord, CertifyRecordStatusEnum.FAILED);
-            }
-        });
-
         return certifyFuture;
     }
 

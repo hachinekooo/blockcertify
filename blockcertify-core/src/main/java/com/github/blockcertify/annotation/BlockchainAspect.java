@@ -7,6 +7,7 @@ import com.github.blockcertify.extractor.DataExtractorManager;
 import com.github.blockcertify.infra.CertifyService;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
+import com.github.blockcertify.model.infra.CertifyRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -14,6 +15,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Aspect // 标识这是一个切面类，用于处理横切逻辑
@@ -42,6 +44,8 @@ public class BlockchainAspect {
             DataExtractor dataExtractor = dataExtractorManager.getExtractorByBizType(certify.bizType());
             CertifyData data = dataExtractor.extract(joinPoint.getArgs());
 
+            AtomicReference<CertifyRecord> certifyRecordRef = new AtomicReference<>();
+
             // 检查区块链功能是否已启用
             if (!blockchainConfig.isEnabled()) {
                 certifyService.saveCertifyData(data, CertifyRecordStatusEnum.DISABLED);
@@ -50,19 +54,26 @@ public class BlockchainAspect {
             }
 
             // 保存存证
-            certifyService.saveCertifyData(data, CertifyRecordStatusEnum.INIT);
+            certifyRecordRef.set(certifyService.saveCertifyData(data, CertifyRecordStatusEnum.INIT));
 
             // 调用SDK
             certifyEngine.certify(data)
+                    // 3. 更新存证记录的状态为处理中
+                    .thenApply(result -> {
+                        certifyService.updateRecordStatus(certifyRecordRef.get(), CertifyRecordStatusEnum.PROCESSING);
+                        return result;
+                    })
                     // 转换结果(同步执行，不会阻塞主线程)
                     .thenApply(result -> result.getTxHash())
                     // 消费结果
                     .thenAccept(txHash -> {
                         log.info("存证成功，交易哈希为: {}", txHash);
+                        certifyService.updateRecordStatus(certifyRecordRef.get(), CertifyRecordStatusEnum.SUBMITTED);
                     })
                     // 异常处理，当链路中任何一步出现异常时触发
                     .exceptionally(ex -> {
                         log.error("存证失败，异常信息为: {}", ex.getMessage());
+                        certifyService.updateRecordStatus(certifyRecordRef.get(), CertifyRecordStatusEnum.FAILED);
                         return null;
                     });
 
