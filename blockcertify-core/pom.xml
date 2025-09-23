@@ -18,6 +18,13 @@
     </properties>
 
     <dependencies>
+        <!-- MySQL 驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+            <scope>test</scope> <!-- 测试环境下需要使用 MySQL 驱动，生产环境下不应该依赖此驱动 -->
+        </dependency>
         <!-- MyBatis-Plus -->
         <dependency>
             <groupId>com.baomidou</groupId>
