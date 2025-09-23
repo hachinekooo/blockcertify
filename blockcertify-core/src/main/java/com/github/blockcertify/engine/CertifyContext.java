@@ -35,4 +35,14 @@ public class CertifyContext {
      */
     private LocalDateTime endTime;
 
+    /*
+    * 创建人
+    * */
+    private String creator;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
 }
