@@ -23,6 +23,10 @@ public class CertifyService {
                 .setBizType(certifyData.getBizType()) // 业务类型
                 .setBizId(certifyData.getBizId()) // 业务ID
                 .setBizOptTime(ctx.getBizOptTime()) // 从上下文中获取业务操作的时间
+                .setCreator(ctx.getCreator()) // 从上下文中获取创建人
+                .setCreateTime(ctx.getCreateTime()) // 从上下文中获取创建时间
+                .setSdkVendor("test")
+                .setSdkVersion("1")
                 .setStatus(certifyRecordStatus.getStatus()); // 存证记录状态
 
         certifyMapper.insert(certifyRecord);
