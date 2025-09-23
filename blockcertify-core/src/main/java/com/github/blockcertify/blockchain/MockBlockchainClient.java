@@ -5,6 +5,7 @@ import com.github.blockcertify.model.CertifyQueryResult;
 import com.github.blockcertify.model.CertifyResult;
 import com.github.blockcertify.support.enums.ClientStatusEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
  * @date 2025/09/10
  */
 @Slf4j
+@Component
 public class MockBlockchainClient implements BlockchainClient {
     @Override
     public void init(Map<String, String> config) {
