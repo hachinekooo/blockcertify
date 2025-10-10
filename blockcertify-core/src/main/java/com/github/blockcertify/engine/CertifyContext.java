@@ -1,5 +1,6 @@
 package com.github.blockcertify.engine;
 
+import com.github.blockcertify.model.CertifyData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,11 +20,46 @@ import java.time.LocalDateTime;
 @AllArgsConstructor // 全参构造方法
 public class CertifyContext {
 
+    /*
+     * 业务类型
+     * */
+    private String bizType;
 
-    /**
-     * 业务操作时间
-     */
-    private LocalDateTime bizOptTime;
+
+    /*
+     * 业务 ID
+     * */
+    private String bizId;
+
+    /*
+     * HTTP请求参数
+     * */
+    private Object[] httpArgs;
+
+    /*
+    * 被存证业务方法参数
+    * */
+    private Object[] bizArgs;
+
+    /*
+     * 提取到的存证数据
+     * */
+    private CertifyData data;
+
+    /*
+     * 认证状态
+     * */
+    private String status;
+
+    /*
+     * 交易哈希
+     * */
+    private String txHash;
+
+    /*
+     * 创建人
+     * */
+    private String creator;
 
     /**
      * 开始时间
@@ -35,10 +71,10 @@ public class CertifyContext {
      */
     private LocalDateTime endTime;
 
-    /*
-    * 创建人
-    * */
-    private String creator;
+    /**
+     * 业务操作时间
+     */
+    private LocalDateTime bizOptTime;
 
     /**
      * 创建时间
