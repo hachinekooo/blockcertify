@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /*
- * AutoCloseable
  * 规范不同厂家的SDK调用。
  *
  * AutoCloseable 接口支持 try-with-resources

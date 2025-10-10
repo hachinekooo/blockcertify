@@ -1,6 +1,7 @@
 package com.github.blockcertify.config;
 
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,10 +26,11 @@ public class BlockchainConfig {
     }
 
     @Data
+    @Getter
     public static class MockConfig {
-        private double successRate;
-        private int avgResponseTime;
-        private boolean simulateReorg;
-        private boolean simulateRandomNetworkDelay;
+        private double failureRate;
+        private int delayMillis;
+        private boolean reorgEnabled;
+        private long seed;
     }
 }

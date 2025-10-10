@@ -6,10 +6,10 @@ blockchain:
   testing:
     mock-enabled: true
     mock-config:
-      success-rate: 0.9           # 90% 成功率
-      avg-response-time: 2000     # 平均响应时间2秒
-      simulate-reorg: false       # 是否模拟重组
-      simulate-random-network-delay: true # 是否模拟随机网络延迟
+      failure-rate: 0.1         # 10% 失败率
+      delay-millis: 1000     # 延迟1秒
+      reorg-enabled: false       # 是否模拟重组
+      seed: 12345 # 随机数种子
 
 
 database:
