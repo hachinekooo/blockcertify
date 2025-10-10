@@ -4,7 +4,7 @@ import com.github.blockcertify.config.BlockchainConfig;
 import com.github.blockcertify.engine.CertifyEngine;
 import com.github.blockcertify.extractor.DataExtractor;
 import com.github.blockcertify.extractor.DataExtractorManager;
-import com.github.blockcertify.infra.CertifyService;
+import com.github.blockcertify.infra.CertifyServiceImpl;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.CertifyResult;
 import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
@@ -75,7 +75,7 @@ class BlockchainAspectTest {
     private BlockchainConfig blockchainConfig;
 
     @MockBean
-    private CertifyService certifyService;
+    private CertifyServiceImpl certifyService;
 
     @MockBean
     private DataExtractorManager dataExtractorManager;

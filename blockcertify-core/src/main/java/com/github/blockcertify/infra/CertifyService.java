@@ -1,41 +1,25 @@
 package com.github.blockcertify.infra;
 
-import com.github.blockcertify.engine.CertifyContext;
-import com.github.blockcertify.engine.CertifyContextHolder;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.infra.CertifyRecord;
 import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+public interface CertifyService {
 
-@Slf4j
-@Service
-public class CertifyService {
-    @Resource
-    private CertifyMapper certifyMapper;
+    /**
+     * 保存存证数据
+     *
+     * @param certifyData 存证数据
+     * @param certifyRecordStatus 存证记录状态
+     * @return {@link CertifyRecord }
+     */
+    CertifyRecord saveCertifyData(CertifyData certifyData, CertifyRecordStatusEnum certifyRecordStatus);
 
-    public CertifyRecord saveCertifyData(CertifyData certifyData, CertifyRecordStatusEnum certifyRecordStatus) {
-        CertifyContext ctx = CertifyContextHolder.getContext();
-
-        CertifyRecord certifyRecord = new CertifyRecord()
-                .setBizType(certifyData.getBizType()) // 业务类型
-                .setBizId(certifyData.getBizId()) // 业务ID
-                .setBizOptTime(ctx.getBizOptTime()) // 从上下文中获取业务操作的时间
-                .setCreator(ctx.getCreator()) // 从上下文中获取创建人
-                .setCreateTime(ctx.getCreateTime()) // 从上下文中获取创建时间
-                .setSdkVendor("test")
-                .setSdkVersion("1")
-                .setStatus(certifyRecordStatus.getStatus()); // 存证记录状态
-
-        certifyMapper.insert(certifyRecord);
-
-        return certifyRecord;
-    }
-
-    public void updateRecordStatus(CertifyRecord certifyRecord, CertifyRecordStatusEnum certifyRecordStatus) {
-        certifyRecord.setStatus(certifyRecordStatus.getStatus());
-        certifyMapper.updateById(certifyRecord);
-    }
+    /**
+     * 更新存证记录状态
+     *
+     * @param id 存证记录ID
+     * @param certifyRecordStatus 存证记录状态
+     */
+    void updateRecordStatus(Long id, CertifyRecordStatusEnum certifyRecordStatus);
 }

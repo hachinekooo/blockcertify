@@ -1,7 +1,7 @@
 package com.github.blockcertify.engine;
 
 import com.github.blockcertify.blockchain.BlockchainClient;
-import com.github.blockcertify.infra.CertifyService;
+import com.github.blockcertify.infra.CertifyServiceImpl;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.CertifyQueryResult;
 import com.github.blockcertify.model.CertifyResult;
@@ -26,7 +26,7 @@ public class CertifyEngine {
     @Resource
     private BlockchainClient blockchainClient;
     @Resource
-    private CertifyService certifyService;
+    private CertifyServiceImpl certifyService;
 
     /**
      * 存证数据（默认异步）
