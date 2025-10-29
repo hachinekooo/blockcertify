@@ -1,16 +1,20 @@
 package com.github.blockcertify.engine;
 
 import com.github.blockcertify.blockchain.BlockchainClient;
+import com.github.blockcertify.infra.CertifyMapper;
 import com.github.blockcertify.infra.CertifyServiceImpl;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.CertifyQueryResult;
 import com.github.blockcertify.model.CertifyResult;
 import com.github.blockcertify.model.CertifyStatus;
+import com.github.blockcertify.model.infra.CertifyRecord;
 import com.github.blockcertify.support.enums.ClientStatusEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -27,6 +31,8 @@ public class CertifyEngine {
     private BlockchainClient blockchainClient;
     @Resource
     private CertifyServiceImpl certifyService;
+    @Resource
+    private CertifyMapper certifyMapper;
 
     /**
      * 存证数据（默认异步）
@@ -68,8 +74,18 @@ public class CertifyEngine {
      * @return {@link CertifyQueryResult } 存证查询结果
      */
     public CertifyQueryResult queryCertify(String tx_hash) {
+        CertifyQueryResult queryResult = new CertifyQueryResult();
 
-        return null;
+        CertifyRecord certifyRecord = certifyMapper.selectByTxHash(tx_hash);
+
+        if (certifyRecord == null) {
+            return null;
+        }
+
+        BeanUtils.copyProperties(certifyRecord, queryResult);
+        queryResult.setQueryTime(LocalDateTime.now());
+
+        return queryResult;
     }
 
     /**
@@ -80,6 +96,18 @@ public class CertifyEngine {
      */
     public CertifyStatus queryCertifyStatus(String tx_hash) {
 
-        return null;
+        CertifyRecord certifyRecord = certifyMapper.selectByTxHash(tx_hash);
+
+        if (certifyRecord == null) {
+            return null;
+        }
+
+        String status = certifyRecord.getStatus();
+
+        CertifyStatus certifyStatus = CertifyStatus.valueOf(status);
+        if (certifyStatus == null) {
+            return  null;
+        }
+        return certifyStatus;
     }
 }

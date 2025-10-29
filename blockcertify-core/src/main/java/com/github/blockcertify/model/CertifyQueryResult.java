@@ -1,5 +1,7 @@
 package com.github.blockcertify.model;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 /**
@@ -8,6 +10,7 @@ import java.time.LocalDateTime;
  * @author wangwenpeng
  * @since 2025-09-11
  */
+@Data
 public class CertifyQueryResult extends CertifyResult{
 
     /*
