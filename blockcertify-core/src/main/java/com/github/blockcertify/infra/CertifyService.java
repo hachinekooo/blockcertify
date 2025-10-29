@@ -2,7 +2,7 @@ package com.github.blockcertify.infra;
 
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.infra.CertifyRecord;
-import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
+import com.github.blockcertify.common.enums.CertifyRecordStatusEnum;
 
 public interface CertifyService {
 

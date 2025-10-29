@@ -1,6 +1,8 @@
 package com.github.blockcertify.engine;
 
 import com.github.blockcertify.blockchain.BlockchainClient;
+import com.github.blockcertify.common.enums.ErrorCode;
+import com.github.blockcertify.exception.business.BusinessException;
 import com.github.blockcertify.infra.CertifyMapper;
 import com.github.blockcertify.infra.CertifyServiceImpl;
 import com.github.blockcertify.model.CertifyData;
@@ -8,7 +10,7 @@ import com.github.blockcertify.model.CertifyQueryResult;
 import com.github.blockcertify.model.CertifyResult;
 import com.github.blockcertify.model.CertifyStatus;
 import com.github.blockcertify.model.infra.CertifyRecord;
-import com.github.blockcertify.support.enums.ClientStatusEnum;
+import com.github.blockcertify.common.enums.ClientStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -79,7 +81,7 @@ public class CertifyEngine {
         CertifyRecord certifyRecord = certifyMapper.selectByTxHash(tx_hash);
 
         if (certifyRecord == null) {
-            return null;
+            throw new BusinessException(ErrorCode.CERTIFY_NOT_FOUND, tx_hash);
         }
 
         BeanUtils.copyProperties(certifyRecord, queryResult);
@@ -99,15 +101,9 @@ public class CertifyEngine {
         CertifyRecord certifyRecord = certifyMapper.selectByTxHash(tx_hash);
 
         if (certifyRecord == null) {
-            return null;
+            throw new BusinessException(ErrorCode.CERTIFY_NOT_FOUND, tx_hash);
         }
-
         String status = certifyRecord.getStatus();
-
-        CertifyStatus certifyStatus = CertifyStatus.valueOf(status);
-        if (certifyStatus == null) {
-            return  null;
-        }
-        return certifyStatus;
+        return CertifyStatus.valueOf(status);
     }
 }

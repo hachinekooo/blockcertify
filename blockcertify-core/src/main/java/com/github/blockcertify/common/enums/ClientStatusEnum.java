@@ -1,4 +1,4 @@
-package com.github.blockcertify.support.enums;
+package com.github.blockcertify.common.enums;
 
 /*
 * 客户端状态

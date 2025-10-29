@@ -1,6 +1,6 @@
 package com.github.blockcertify.model;
 
-import com.github.blockcertify.support.enums.ClientStatusEnum;
+import com.github.blockcertify.common.enums.ClientStatusEnum;
 
 import java.time.LocalDateTime;
 

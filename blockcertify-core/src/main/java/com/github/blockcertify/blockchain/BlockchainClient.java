@@ -3,7 +3,7 @@ package com.github.blockcertify.blockchain;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.CertifyQueryResult;
 import com.github.blockcertify.model.CertifyResult;
-import com.github.blockcertify.support.enums.ClientStatusEnum;
+import com.github.blockcertify.common.enums.ClientStatusEnum;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

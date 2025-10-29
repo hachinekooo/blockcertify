@@ -2,7 +2,7 @@ package com.github.blockcertify.extractor;
 
 
 import cn.hutool.core.util.StrUtil;
-import com.github.blockcertify.support.enums.BizExtractorEnum;
+import com.github.blockcertify.common.enums.BizExtractorEnum;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

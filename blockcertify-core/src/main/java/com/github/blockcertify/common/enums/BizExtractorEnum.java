@@ -1,4 +1,4 @@
-package com.github.blockcertify.support.enums;
+package com.github.blockcertify.common.enums;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.Getter;

@@ -7,7 +7,7 @@ import com.github.blockcertify.extractor.DataExtractorManager;
 import com.github.blockcertify.infra.CertifyServiceImpl;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.CertifyResult;
-import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
+import com.github.blockcertify.common.enums.CertifyRecordStatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

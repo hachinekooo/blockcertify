@@ -5,7 +5,7 @@ import com.github.blockcertify.engine.CertifyContext;
 import com.github.blockcertify.engine.CertifyContextHolder;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.infra.CertifyRecord;
-import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
+import com.github.blockcertify.common.enums.CertifyRecordStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -2,12 +2,13 @@ package com.github.blockcertify.annotation;
 
 import com.github.blockcertify.config.BlockchainConfig;
 import com.github.blockcertify.engine.CertifyEngine;
+import com.github.blockcertify.exception.business.BusinessException;
 import com.github.blockcertify.extractor.DataExtractor;
 import com.github.blockcertify.extractor.DataExtractorManager;
 import com.github.blockcertify.infra.CertifyServiceImpl;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.infra.CertifyRecord;
-import com.github.blockcertify.support.enums.CertifyRecordStatusEnum;
+import com.github.blockcertify.common.enums.CertifyRecordStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -75,7 +76,7 @@ public class BlockchainAspect {
                     });
 
 
-        } catch (Exception e) {
+        } catch (BusinessException e) {
             log.error("存证处理失败，异常信息为: {}", e.getMessage());
         }
     }
