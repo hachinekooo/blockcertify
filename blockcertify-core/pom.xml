@@ -23,7 +23,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
-            <scope>test</scope> <!-- 测试环境下需要使用 MySQL 驱动，生产环境下不应该依赖此驱动 -->
+            <scope>runtime</scope>
         </dependency>
         <!-- MyBatis-Plus -->
         <dependency>
@@ -33,14 +33,8 @@
         </dependency>
         <!-- Spring Web MVC -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-        <!-- Servlet API -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope> <!-- 避免导致打包时重复引入 Servlet API，引发容器启动冲突. 因为 Servlet API 是容器提供的(如 Tomcat)，不需要打包进应用 -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <!-- 切面编程，该依赖支持自动开启 AOP，无需显式使用 EnableAspectJAutoProxy 注解 -->
@@ -55,6 +49,31 @@
             <artifactId>guava</artifactId>
             <version>33.4.0-jre</version>
         </dependency>
+        
+        <!-- Jackson for JSON processing -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        
+        <!-- Micrometer for metrics (optional) -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+        
+        <!-- Bean Validation API -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        
+        <!-- Hibernate Validator (implementation) -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
 
         <!-- Spring Boot Test Starter Include JUnit 5 Mockito -->
         <dependency>
@@ -64,5 +83,17 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.github.blockcertify.TestApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

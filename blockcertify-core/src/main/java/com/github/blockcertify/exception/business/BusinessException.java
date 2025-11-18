@@ -2,38 +2,39 @@ package com.github.blockcertify.exception.business;
 
 import com.github.blockcertify.common.enums.ErrorCode;
 import com.github.blockcertify.exception.CertifyException;
+import com.github.blockcertify.exception.model.ExceptionSeverity;
+import com.github.blockcertify.exception.model.RetryPolicy;
 
-/**
- * 业务异常
- *
- * @author wangwenpeng
- * @date 2025/10/29
- */
+import java.util.Collections;
+import java.util.Map;
+
 public class BusinessException extends CertifyException {
 
+    private static final ExceptionSeverity DEFAULT_SEVERITY = ExceptionSeverity.MEDIUM;
 
-    /**
-     * 直接使用枚举的 Code 和 msg
-     *
-     * @param errorCode 错误码枚举
-     */
     public BusinessException(ErrorCode errorCode) {
-        super(errorCode.getCode(), errorCode.getMessage());
+        this(errorCode, errorCode.getMessage(), null, Collections.emptyMap());
     }
 
-    /**
-     * 使用格式化后的消息
-     *
-     * @param errorCode 错误码枚举
-     * @param params 被填入的消息
-     */
     public BusinessException(ErrorCode errorCode, Object... params) {
-        super(errorCode.getCode(), ErrorCode.doFormat(errorCode, params));
+        this(errorCode, ErrorCode.doFormat(errorCode, params), null, Collections.emptyMap());
     }
 
-     @Override
-    public String toString() {
-        return String.format("BusinessException{code=%d, message='%s'}", getCode(), getMessage());
+    public BusinessException(ErrorCode errorCode, Throwable cause) {
+        this(errorCode, errorCode.getMessage(), cause, Collections.emptyMap());
     }
 
+    public BusinessException(ErrorCode errorCode, String message, Throwable cause) {
+        this(errorCode, message, cause, Collections.emptyMap());
+    }
+
+    public BusinessException(ErrorCode errorCode, String message, Throwable cause, Map<String, Object> details) {
+        super(errorCode,
+                message,
+                cause,
+                DEFAULT_SEVERITY,
+                RetryPolicy.disabled(),
+                null,
+                details);
+    }
 }

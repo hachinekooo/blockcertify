@@ -81,4 +81,13 @@ public class CertifyContext {
      */
     private LocalDateTime createTime;
 
+    /*
+    * 请求路径
+    * */
+    private String path;
+
+    /*
+    * 链路追踪ID
+    * */
+    private String traceId;
 }

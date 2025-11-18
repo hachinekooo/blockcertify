@@ -2,38 +2,41 @@ package com.github.blockcertify.exception.system;
 
 import com.github.blockcertify.common.enums.ErrorCode;
 import com.github.blockcertify.exception.CertifyException;
-import lombok.Getter;
+import com.github.blockcertify.exception.model.ExceptionSeverity;
+import com.github.blockcertify.exception.model.RetryPolicy;
 
-/**
- * 系统异常
- *
- * @author wangwenpeng
- * @date 2025/10/29
- */
-@Getter
+import java.time.Duration;
+import java.util.Collections;
+import java.util.Map;
+
 public class SystemException extends CertifyException {
 
-    /**
-     * 直接使用枚举的 Code 和 msg
-     *
-     * @param errorCode 错误码枚举
-     */
+    private static final ExceptionSeverity DEFAULT_SEVERITY = ExceptionSeverity.HIGH;
+    private static final RetryPolicy DEFAULT_RETRY = RetryPolicy.of(3, Duration.ofSeconds(60));
+
     public SystemException(ErrorCode errorCode) {
-        super(errorCode.getCode(), errorCode.getMessage());
+        this(errorCode, errorCode.getMessage(), null, Collections.emptyMap());
     }
 
-    /**
-     * 使用格式化后的消息
-     *
-     * @param errorCode 错误码枚举
-     * @param params 被填入的消息
-     */
     public SystemException(ErrorCode errorCode, Object... params) {
-        super(errorCode.getCode(), ErrorCode.doFormat(errorCode, params));
+        this(errorCode, ErrorCode.doFormat(errorCode, params), null, Collections.emptyMap());
     }
 
-    @Override
-    public String toString() {
-        return String.format("SystemException{code=%d, message='%s'}", getCode(), getMessage());
+    public SystemException(ErrorCode errorCode, Throwable cause) {
+        this(errorCode, errorCode.getMessage(), cause, Collections.emptyMap());
+    }
+
+    public SystemException(ErrorCode errorCode, String message, Throwable cause) {
+        this(errorCode, message, cause, Collections.emptyMap());
+    }
+
+    public SystemException(ErrorCode errorCode, String message, Throwable cause, Map<String, Object> details) {
+        super(errorCode,
+                message,
+                cause,
+                DEFAULT_SEVERITY,
+                DEFAULT_RETRY,
+                null,
+                details);
     }
 }

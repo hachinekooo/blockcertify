@@ -1,5 +1,7 @@
 package com.github.blockcertify.common;
 
+import com.github.blockcertify.engine.CertifyContext;
+import com.github.blockcertify.engine.CertifyContextHolder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,9 @@ public class Result<T> implements Serializable {
     private String message; // 返回信息
     private T data;         // 返回数据
 
-    private Long timestamp; // 时间戳
+    private Long timestamp; // 响应时间戳
+    private String traceId;  // 链路追踪ID
+    private String path;     // 请求路径
 
 
     // 成功静态方法
@@ -40,7 +44,11 @@ public class Result<T> implements Serializable {
         result.setCode(code);
         result.setMessage(message);
         result.setData(data);
+        // 自动设置拓展信息，不用手动传
         result.setTimestamp(System.currentTimeMillis());
+        CertifyContext context = CertifyContextHolder.getContext();
+        result.setTraceId(CertifyContextHolder.getContext().getTraceId());
+        result.setPath(context.getPath());
         return result;
     }
 

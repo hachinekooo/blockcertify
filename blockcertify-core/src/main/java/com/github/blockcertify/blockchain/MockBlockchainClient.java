@@ -1,6 +1,8 @@
 package com.github.blockcertify.blockchain;
 
+import com.github.blockcertify.common.enums.ErrorCode;
 import com.github.blockcertify.config.BlockchainConfig;
+import com.github.blockcertify.exception.system.SystemException;
 import com.github.blockcertify.model.CertifyData;
 import com.github.blockcertify.model.CertifyQueryResult;
 import com.github.blockcertify.model.CertifyResult;
@@ -13,6 +15,7 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 模拟区块链客户端
@@ -77,46 +80,84 @@ public class MockBlockchainClient implements BlockchainClient {
     @Override
     public CertifyResult certifySync(CertifyData certifyData) {
         log.info("模拟存证（同步）...");
+        
+        // 模拟延迟
+        maybeDelay();
+        
+        // 模拟失败
+        if (shouldFail()) {
+            log.warn("Mock 模拟故障 - 存证失败");
+            throw new SystemException(ErrorCode.BLOCKCHAIN_ERROR, "模拟区块链存证失败");
+        }
+        
         return CertifyResult.builder()
                 .txIndex(1)
-                .txHash("0x123...")
+                .txHash("0xmock" + System.currentTimeMillis())
                 .success(true)
                 .blockNumber(BigInteger.valueOf(100))
                 .blockHeight(BigInteger.valueOf(100))
                 .build();
     }
+    
+    private void maybeDelay() {
+        if (delayMillis > 0) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(delayMillis);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+    
+    private boolean shouldFail() {
+        return random.nextDouble() < failureRate;
+    }
 
     @Override
     public CompletableFuture<CertifyResult> certifyAsync(CertifyData certifyData) {
         log.info("模拟存证（异步）...");
-        CompletableFuture<CertifyResult> asyncTask = CompletableFuture.supplyAsync(() -> {
-            try {
-                Thread.sleep(1000);
-                return CertifyResult.builder()
-                        .txIndex(1)
-                        .txHash("0x123...")
-                        .success(true)
-                        .blockNumber(BigInteger.valueOf(100))
-                        .blockHeight(BigInteger.valueOf(100))
-                        .build();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        return CompletableFuture.supplyAsync(() -> {
+            maybeDelay();
+            
+            if (shouldFail()) {
+                log.warn("Mock 模拟故障 - 异步存证失败");
+                throw new SystemException(ErrorCode.BLOCKCHAIN_ERROR, "模拟区块链异步存证失败");
             }
+            
+            return CertifyResult.builder()
+                    .txIndex(1)
+                    .txHash("0xmock" + System.currentTimeMillis())
+                    .success(true)
+                    .blockNumber(BigInteger.valueOf(100))
+                    .blockHeight(BigInteger.valueOf(100))
+                    .build();
         });
-        return asyncTask;
-
     }
 
     @Override
     public CertifyQueryResult queryCertify(String txHash) {
         log.info("模拟查询存证...");
-        return null;
+        maybeDelay();
+        
+        // 模拟重组/pending 状态
+        if (reorgEnabled && random.nextDouble() < 0.3) {
+            log.info("Mock 模拟 pending 状态");
+            return CertifyQueryResult.builder()
+                    .txHash(txHash)
+                    .build();
+        }
+        
+        return CertifyQueryResult.builder()
+                .txHash(txHash)
+                .blockNumber(BigInteger.valueOf(100))
+                .build();
     }
 
     @Override
     public boolean validateCertify(String txHash) {
         log.info("模拟验证存证...");
-        return true;
+        maybeDelay();
+        return !shouldFail();
     }
 
     @Override

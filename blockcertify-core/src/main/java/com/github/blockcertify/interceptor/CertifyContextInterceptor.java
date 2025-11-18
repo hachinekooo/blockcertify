@@ -1,5 +1,7 @@
 package com.github.blockcertify.interceptor;
 
+import cn.hutool.core.lang.UUID;
+import com.github.blockcertify.engine.CertifyContext;
 import com.github.blockcertify.engine.CertifyContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
@@ -18,8 +20,18 @@ public class CertifyContextInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("开始处理请求");
         CertifyContextHolder.setContext();
-        CertifyContextHolder.getContext().setStartTime(LocalDateTime.now());
-        CertifyContextHolder.getContext().setBizOptTime(LocalDateTime.now());
+        CertifyContext context = CertifyContextHolder.getContext();
+        context.setStartTime(LocalDateTime.now());
+        context.setBizOptTime(LocalDateTime.now());
+        context.setPath(request.getRequestURI());
+
+        // 设置traceId
+        String traceId = request.getHeader("X-Trace-Id");
+        if (traceId == null) {
+            traceId = UUID.randomUUID().toString().replace("-", "");
+        }
+        context.setTraceId(traceId);
+        response.setHeader("X-Trace-Id", traceId); // 放到response header里，前端可以获取
         return true;
     }
 
