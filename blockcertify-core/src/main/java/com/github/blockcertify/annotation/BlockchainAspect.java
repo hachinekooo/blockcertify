@@ -3,12 +3,15 @@ package com.github.blockcertify.annotation;
 import com.github.blockcertify.config.BlockchainConfig;
 import com.github.blockcertify.engine.CertifyEngine;
 import com.github.blockcertify.exception.business.BusinessException;
+import com.github.blockcertify.exception.system.SystemException;
 import com.github.blockcertify.extractor.DataExtractor;
 import com.github.blockcertify.extractor.DataExtractorManager;
 import com.github.blockcertify.infra.CertifyServiceImpl;
 import com.github.blockcertify.model.CertifyData;
+import com.github.blockcertify.model.CertifyResult;
 import com.github.blockcertify.model.infra.CertifyRecord;
 import com.github.blockcertify.common.enums.CertifyRecordStatusEnum;
+import com.github.blockcertify.common.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -72,12 +75,34 @@ public class BlockchainAspect {
                     .exceptionally(ex -> {
                         log.error("存证失败，异常信息为: {}", ex.getMessage());
                         certifyService.updateRecordStatus(certifyRecord.getId(), CertifyRecordStatusEnum.FAILED);
-                        return null;
+                        return null; // 返回null表示失败，实际结果通过createFailedResult方法处理
                     });
 
-
         } catch (BusinessException e) {
-            log.error("存证处理失败，异常信息为: {}", e.getMessage());
+            log.error("存证处理失败，业务异常信息为: {}", e.getMessage());
+            throw e; // 重新抛出业务异常，让全局异常处理器处理
+        } catch (Exception e) {
+            log.error("存证处理失败，系统异常信息为: {}", e.getMessage(), e);
+            throw new SystemException(ErrorCode.SYSTEM_ERROR,
+                                     "存证处理过程中发生系统异常", e);
         }
+    }
+
+    /**
+     * 创建失败的存证结果
+     * TODO(human): 请实现 createFailedResult 方法，根据异常类型返回适当的失败结果
+     *
+     * 你的任务: 实现这个方法，根据不同的异常类型创建合适的失败结果对象
+     *
+     * 指导原则:
+     * 1. 对于 BusinessException，返回业务逻辑失败的 CertifyResult
+     * 2. 对于 SystemException，返回系统错误的 CertifyResult
+     * 3. 对于其他异常，返回通用错误结果的 CertifyResult
+     * 4. 确保结果对象包含适当的错误信息和状态
+     */
+    private CertifyResult createFailedResult(Throwable ex) {
+        // TODO(human): 在这里实现你的异常处理逻辑
+        // 提示: 可以使用 instanceof 检查异常类型，然后根据类型创建不同的结果
+        return null;
     }
 }

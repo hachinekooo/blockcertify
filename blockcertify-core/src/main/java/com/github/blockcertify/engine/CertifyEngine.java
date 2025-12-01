@@ -3,6 +3,7 @@ package com.github.blockcertify.engine;
 import com.github.blockcertify.blockchain.BlockchainClient;
 import com.github.blockcertify.common.enums.ErrorCode;
 import com.github.blockcertify.exception.business.BusinessException;
+import com.github.blockcertify.exception.validation.ExceptionValidator;
 import com.github.blockcertify.infra.CertifyMapper;
 import com.github.blockcertify.infra.CertifyServiceImpl;
 import com.github.blockcertify.model.CertifyData;
@@ -43,11 +44,12 @@ public class CertifyEngine {
      * @return {@link String } 唯一交易哈希
      */
     public CompletableFuture<CertifyResult> certify(CertifyData  certifyData) {
+        // 参数验证
+        ExceptionValidator.notNull(certifyData, "certifyData");
+
         ClientStatusEnum clientStatus = blockchainClient.getStatus();
-        if (clientStatus != ClientStatusEnum.CONNECTED) {
-            log.error("certify status is not CONNECTED");
-            return null;
-        }
+        ExceptionValidator.stateEquals(clientStatus, ClientStatusEnum.CONNECTED,
+                                     "区块链客户端连接状态");
 
         // 调用SDK异步存证方法（返回一个future，这个future是一个"未来的承诺"）
         CompletableFuture<CertifyResult> certifyFuture = blockchainClient.certifyAsync(certifyData);
@@ -61,11 +63,13 @@ public class CertifyEngine {
      * @return {@link String } 唯一交易哈希
      */
     public CertifyResult certifySync(CertifyData certifyData) {
+        // 参数验证
+        ExceptionValidator.notNull(certifyData, "certifyData");
+
         ClientStatusEnum clientStatus = blockchainClient.getStatus();
-        if (clientStatus != ClientStatusEnum.CONNECTED) {
-            log.error("certify status is not CONNECTED");
-            return null;
-        }
+        ExceptionValidator.stateEquals(clientStatus, ClientStatusEnum.CONNECTED,
+                                     "区块链客户端连接状态");
+
         return blockchainClient.certifySync(certifyData);
     }
 
@@ -76,14 +80,14 @@ public class CertifyEngine {
      * @return {@link CertifyQueryResult } 存证查询结果
      */
     public CertifyQueryResult queryCertify(String tx_hash) {
-        CertifyQueryResult queryResult = new CertifyQueryResult();
+        // 参数验证
+        ExceptionValidator.notEmpty(tx_hash, "tx_hash");
+        ExceptionValidator.length(tx_hash, "tx_hash", 1, 100);
 
+        CertifyQueryResult queryResult = new CertifyQueryResult();
         CertifyRecord certifyRecord = certifyMapper.selectByTxHash(tx_hash);
 
-        if (certifyRecord == null) {
-            throw new BusinessException(ErrorCode.CERTIFY_NOT_FOUND, tx_hash);
-        }
-
+        ExceptionValidator.notNull(certifyRecord, "存证记录");
         BeanUtils.copyProperties(certifyRecord, queryResult);
         queryResult.setQueryTime(LocalDateTime.now());
 
@@ -97,13 +101,21 @@ public class CertifyEngine {
      * @return {@link CertifyStatus } 存证状态枚举值
      */
     public CertifyStatus queryCertifyStatus(String tx_hash) {
+        // 参数验证
+        ExceptionValidator.notEmpty(tx_hash, "tx_hash");
+        ExceptionValidator.length(tx_hash, "tx_hash", 1, 100);
 
         CertifyRecord certifyRecord = certifyMapper.selectByTxHash(tx_hash);
+        ExceptionValidator.notNull(certifyRecord, "存证记录");
 
-        if (certifyRecord == null) {
-            throw new BusinessException(ErrorCode.CERTIFY_NOT_FOUND, tx_hash);
-        }
         String status = certifyRecord.getStatus();
-        return CertifyStatus.valueOf(status);
+        ExceptionValidator.notEmpty(status, "存证状态");
+
+        try {
+            return CertifyStatus.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            throw new BusinessException(ErrorCode.BUSINESS_LOGIC_ERROR,
+                                      "无效的存证状态: " + status);
+        }
     }
 }

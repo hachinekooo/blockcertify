@@ -3,6 +3,8 @@ package com.github.blockcertify.extractor;
 
 import cn.hutool.core.util.StrUtil;
 import com.github.blockcertify.common.enums.BizExtractorEnum;
+import com.github.blockcertify.common.enums.ErrorCode;
+import com.github.blockcertify.exception.business.BusinessException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -11,7 +13,7 @@ import java.util.Map;
 /**
  * 数据提取器管理器
  * <p>
- * 它的核心职责应该是“管理”和“协调”不同的 DataExtractor 实现，例如根据业务类型获取一个具体的 DataExtractor
+ * 它的核心职责应该是"管理"和"协调"不同的 DataExtractor 实现，例如根据业务类型获取一个具体的 DataExtractor
  *
  * @author wangwenpeng
  * @date 2025/09/18
@@ -32,11 +34,23 @@ public class DataExtractorManager {
      * @return {@link DataExtractor } 数据提取器
      */
     public DataExtractor getExtractorByBizType(String bizType) {
-        if (StrUtil.isEmpty(bizType)) { return null; }
+        if (StrUtil.isEmpty(bizType)) {
+            throw new BusinessException(ErrorCode.INVALID_PARAMETER,
+                                      "业务类型不能为空");
+        }
 
         BizExtractorEnum byBizType = BizExtractorEnum.getByBizType(bizType);
-        if (byBizType == null) return null;
+        if (byBizType == null) {
+            throw new BusinessException(ErrorCode.VALIDATION_FAILED,
+                                      "不支持的业务类型: " + bizType);
+        }
 
-        return extractors.get(byBizType.getExtractorName());
+        DataExtractor extractor = extractors.get(byBizType.getExtractorName());
+        if (extractor == null) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,
+                                      "未找到业务类型对应的数据提取器: " + bizType);
+        }
+
+        return extractor;
     }
 }

@@ -83,7 +83,7 @@ public enum ErrorCode {
             String formatPattern = errorCode.getMessage().replace("{}", "%s");
             return String.format(formatPattern, params);
         } catch (Exception e) {
-            log.error("[格式化失败：错误码({})|错误内容({})|参数({})", errorCode.getCode(), errorCode.getMessage(), params);
+            log.error("[格式化失败：错误码({})|错误内容({})|参数({})]", errorCode.getCode(), errorCode.getMessage(), params);
             return errorCode.getMessage(); // 降级返回原始模板
         }
     }
